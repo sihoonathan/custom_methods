@@ -20,7 +20,57 @@ module Enumerable
       to_enum(__method__)
     end
   end
-end
 
-[1, 2, 3].my_each_with_index {|index| puts index}
+  def my_select(&block)
+    if block_given?
+      ary = []
+      for each in self
+        if block.call(each)
+          ary << each
+        end
+      end
+      ary
+    else
+      to_enum(__method__)
+    end
+  end
+
+  def my_all?(&block)
+    if block_given?
+      for each in self
+        if block.call(each) == false
+          return false
+        end
+      end
+      true
+    else
+      for each in self
+        if !!each == false
+          return false
+        end
+      end
+      true
+    end
+  end
+
+  def my_any?(&block)
+    if block_given?
+      for each in self
+        if block.call(each)
+          return true
+        end
+      end
+      false
+    else
+      for each in self
+        if !!each == true
+          return true
+        end
+      end
+      false
+    end
+  end
+
+
+end
 

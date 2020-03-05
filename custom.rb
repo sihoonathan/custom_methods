@@ -126,28 +126,30 @@ module Enumerable
   end
 
   def my_inject(initial=nil, &block)
+    array_copy = Array(self).dup
     if block_given?
-      if initial == nil
-        final = 0
-        self.my_each {|each| final = block.call(final, each)}
-        final
-      else
-        final = initial
-        self.my_each {|each| final = block.call(final, each)}
-        final
-      end
+      initial = initial || array_copy.shift
+      array_copy.my_each {|each| initial = block.call(initial, each)}
+      initial
     else
       raise LocalJumpError.new("no block given")
     end
   end
 
-
-
+  def my_inject_yield(initial=nil)
+    array_copy = Array(self).dup
+    initial = initial || array_copy.shift
+    array_copy.my_each {|each| initial = yield(initial, each)}
+    initial
+  end
 end
 
+def multiply_els(arr)
+  arr.my_inject_yield {|prod, n| prod * n}
+end
 
-
-p (5..10).my_inject {|sum, n| sum + n}
-p (5..10).my_inject(1) { |product, n| product * n }
-p (5..10).my_inject
-# p (5..10).inject
+c = [5, 6, 7]
+p c.my_inject { |sum, n| sum + n }
+p multiply_els([2, 4, 5])
+p c.my_inject_yield { |sum, n| sum + n }
+p multiply_els([2, 4, 5])

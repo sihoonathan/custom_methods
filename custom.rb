@@ -125,6 +125,16 @@ module Enumerable
     end
   end
 
+  def my_map_yield
+    ary = []
+    if block_given?
+      self.my_each {|each| ary << yield(each)}
+      ary
+    else
+      self.to_enum(__method__)
+    end
+  end
+
   def my_inject(initial=nil, &block)
     array_copy = Array(self).dup
     if block_given?
@@ -142,14 +152,14 @@ module Enumerable
     array_copy.my_each {|each| initial = yield(initial, each)}
     initial
   end
+
+
 end
 
 def multiply_els(arr)
   arr.my_inject_yield {|prod, n| prod * n}
 end
 
-c = [5, 6, 7]
-p c.my_inject { |sum, n| sum + n }
-p multiply_els([2, 4, 5])
-p c.my_inject_yield { |sum, n| sum + n }
-p multiply_els([2, 4, 5])
+my_proc = Proc.new {|each| each * 3}
+
+p [1, 2, 3].my_map_yield(&my_proc)

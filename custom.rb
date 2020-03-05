@@ -152,8 +152,6 @@ module Enumerable
     array_copy.my_each {|each| initial = yield(initial, each)}
     initial
   end
-
-
 end
 
 def multiply_els(arr)
@@ -161,5 +159,4 @@ def multiply_els(arr)
 end
 
 my_proc = Proc.new {|each| each * 3}
-
 p [1, 2, 3].my_map_yield(&my_proc)
